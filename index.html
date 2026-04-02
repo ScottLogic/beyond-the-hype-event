@@ -13,15 +13,15 @@
       --surface:      #161b25;
       --surface-alt:  #1e2536;
       --border:       #2a3347;
-      --accent:       #4f8ef7;
-      --accent-glow:  rgba(79, 142, 247, 0.18);
-      --accent-2:     #7c5cfc;
+      --accent:       #e0197d;   /* pink from motif  */
+      --accent-glow:  rgba(224, 25, 125, 0.15);
+      --accent-2:     #1bbdd4;   /* teal from motif  */
       --text:         #e4e8f0;
       --text-muted:   #8893a8;
       --heading-font: 'Segoe UI', system-ui, sans-serif;
       --body-font:    'Segoe UI', system-ui, sans-serif;
       --radius:       12px;
-      --max-width:    900px;
+      --max-width:    960px;
     }
 
     /* =====================================================
@@ -62,9 +62,49 @@
        ===================================================== */
     .hero {
       padding: 5rem 0 4rem;
-      text-align: center;
       background:
-        radial-gradient(ellipse 70% 50% at 50% 0%, var(--accent-glow), transparent 70%);
+        radial-gradient(ellipse 60% 70% at 80% 50%, rgba(27, 189, 212, 0.1), transparent 60%),
+        radial-gradient(ellipse 50% 60% at 10% 40%, var(--accent-glow), transparent 60%);
+    }
+
+    /* row 1 & 3 — pill and countdown are full-width centred rows */
+    .hero-top,
+    .hero-bottom {
+      text-align: center;
+    }
+
+    .hero-top { margin-bottom: 2rem; }
+    .hero-bottom { margin-top: 2rem; }
+
+    /* row 2 — title left, image right */
+    .hero-mid {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+
+    .hero-text {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .hero-image {
+      flex: 0 0 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-image img {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
     }
 
     .hero-eyebrow {
@@ -74,25 +114,29 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--accent);
-      background: rgba(79, 142, 247, 0.1);
-      border: 1px solid rgba(79, 142, 247, 0.3);
+      background: var(--accent-glow);
+      border: 1px solid var(--accent);
       border-radius: 999px;
       padding: 0.3rem 1rem;
-      margin-bottom: 1.5rem;
+      opacity: 0.9;
     }
 
     .hero h1 {
       font-family: var(--heading-font);
-      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
       font-weight: 700;
       line-height: 1.2;
       letter-spacing: -0.02em;
-      max-width: 780px;
-      margin: 0 auto 2rem;
-      background: linear-gradient(135deg, var(--text) 40%, var(--accent));
+      background: linear-gradient(135deg, var(--text) 45%, var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+
+    @media (max-width: 680px) {
+      .hero-mid     { flex-direction: column-reverse; text-align: center; }
+      .hero-image   { flex: 0 0 auto; }
+      .hero-image img { width: 160px; height: 160px; }
     }
 
     /* ---- countdown ---- */
@@ -184,7 +228,7 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
       color: #fff;
     }
 
@@ -311,17 +355,33 @@
   <!-- ===== HERO ===== -->
   <header class="hero">
     <div class="container">
-      <div class="hero-eyebrow">30 June 2026 &nbsp;·&nbsp; Evening event</div>
-      <h1>Rethinking Software Engineering for the AI Age</h1>
 
-      <div class="countdown" id="countdown">
-        <div class="countdown-unit"><span class="countdown-value" id="cd-days">--</span><span class="countdown-label">Days</span></div>
-        <div class="countdown-unit"><span class="countdown-value" id="cd-hours">--</span><span class="countdown-label">Hours</span></div>
-        <div class="countdown-unit"><span class="countdown-value" id="cd-mins">--</span><span class="countdown-label">Minutes</span></div>
-        <div class="countdown-unit"><span class="countdown-value" id="cd-secs">--</span><span class="countdown-label">Seconds</span></div>
+      <!-- row 1: pill -->
+      <div class="hero-top">
+        <div class="hero-eyebrow">30 June 2026 &nbsp;·&nbsp; Evening event</div>
       </div>
 
-      <p class="event-date">Tuesday, 30 June 2026</p>
+      <!-- row 2: title + image -->
+      <div class="hero-mid">
+        <div class="hero-text">
+          <h1>Rethinking Software Engineering for the AI Age</h1>
+        </div>
+        <div class="hero-image">
+          <img src="assets/AI event motif.png" alt="AI event motif" />
+        </div>
+      </div>
+
+      <!-- row 3: countdown -->
+      <div class="hero-bottom">
+        <div class="countdown" id="countdown">
+          <div class="countdown-unit"><span class="countdown-value" id="cd-days">--</span><span class="countdown-label">Days</span></div>
+          <div class="countdown-unit"><span class="countdown-value" id="cd-hours">--</span><span class="countdown-label">Hours</span></div>
+          <div class="countdown-unit"><span class="countdown-value" id="cd-mins">--</span><span class="countdown-label">Minutes</span></div>
+          <div class="countdown-unit"><span class="countdown-value" id="cd-secs">--</span><span class="countdown-label">Seconds</span></div>
+        </div>
+        <p class="event-date" style="margin-top:0.75rem">Tuesday, 30 June 2026</p>
+      </div>
+
     </div>
   </header>
 
