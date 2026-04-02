@@ -58,6 +58,34 @@
     }
 
     /* =====================================================
+       NAV
+       ===================================================== */
+    .site-nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-nav-inner {
+      display: flex;
+      align-items: center;
+      height: 56px;
+    }
+
+    .site-nav-logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+
+    /* placeholder for future nav links */
+    .site-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-left: auto;
+    }
+
+    /* =====================================================
        HERO
        ===================================================== */
     .hero {
@@ -351,6 +379,23 @@
   </style>
 </head>
 <body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="site-nav">
+    <div class="container">
+      <div class="site-nav-inner">
+        <a class="site-nav-logo" href="https://www.scottlogic.com/" target="_blank" rel="noopener">
+          <img
+            src="https://scottlogic.cdn.prismic.io/scottlogic/80157ef8-548d-4b98-8fa1-59dec2c21ff0_Scott+Logic+logo+inverted+website+40px+high.svg"
+            alt="Scott Logic"
+          />
+        </a>
+        <div class="site-nav-links">
+          <!-- nav links go here -->
+        </div>
+      </div>
+    </div>
+  </nav>
 
   <!-- ===== HERO ===== -->
   <header class="hero">
