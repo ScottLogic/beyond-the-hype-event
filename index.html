@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rethinking Software Engineering for the AI Age</title>
+  <style>
+    /* =====================================================
+       THEME — edit these variables to restyle the page
+       ===================================================== */
+    :root {
+      --bg:           #0d0f14;
+      --surface:      #161b25;
+      --surface-alt:  #1e2536;
+      --border:       #2a3347;
+      --accent:       #4f8ef7;
+      --accent-glow:  rgba(79, 142, 247, 0.18);
+      --accent-2:     #7c5cfc;
+      --text:         #e4e8f0;
+      --text-muted:   #8893a8;
+      --heading-font: 'Segoe UI', system-ui, sans-serif;
+      --body-font:    'Segoe UI', system-ui, sans-serif;
+      --radius:       12px;
+      --max-width:    900px;
+    }
+
+    /* =====================================================
+       RESET & BASE
+       ===================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--body-font);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* =====================================================
+       LAYOUT HELPERS
+       ===================================================== */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section { padding: 4rem 0; }
+
+    hr.section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* =====================================================
+       HERO
+       ===================================================== */
+    .hero {
+      padding: 5rem 0 4rem;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, var(--accent-glow), transparent 70%);
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(79, 142, 247, 0.1);
+      border: 1px solid rgba(79, 142, 247, 0.3);
+      border-radius: 999px;
+      padding: 0.3rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: var(--heading-font);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      max-width: 780px;
+      margin: 0 auto 2rem;
+      background: linear-gradient(135deg, var(--text) 40%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ---- countdown ---- */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.4rem;
+      min-width: 80px;
+    }
+
+    .countdown-value {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .event-date {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    /* =====================================================
+       PITCH
+       ===================================================== */
+    .pitch {
+      background: var(--surface);
+    }
+
+    .pitch-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .pitch p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .pitch p:last-of-type { margin-bottom: 2rem; }
+
+    .pitch p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ---- CTA button ---- */
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: filter 0.2s, transform 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    /* =====================================================
+       SPEAKERS
+       ===================================================== */
+    .speakers { background: var(--bg); }
+
+    .speakers h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .speakers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .speaker-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .speaker-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    .speaker-card.tbd {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .speaker-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--border);
+      margin-bottom: 1rem;
+      background: var(--surface-alt);
+    }
+
+    .speaker-avatar-placeholder {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 3px dashed var(--border);
+      margin-bottom: 1rem;
+      background: var(--surface-alt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 1.8rem;
+    }
+
+    .speaker-name {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.15rem;
+      color: var(--text);
+    }
+
+    .speaker-affiliation {
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .speaker-talk-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      font-style: italic;
+    }
+
+    .speaker-bio {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* =====================================================
+       FOOTER
+       ===================================================== */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+    @media (max-width: 480px) {
+      .countdown-unit { min-width: 60px; padding: 0.8rem 0.8rem; }
+      .countdown-value { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">30 June 2026 &nbsp;·&nbsp; Evening event</div>
+      <h1>Rethinking Software Engineering for the AI Age</h1>
+
+      <div class="countdown" id="countdown">
+        <div class="countdown-unit"><span class="countdown-value" id="cd-days">--</span><span class="countdown-label">Days</span></div>
+        <div class="countdown-unit"><span class="countdown-value" id="cd-hours">--</span><span class="countdown-label">Hours</span></div>
+        <div class="countdown-unit"><span class="countdown-value" id="cd-mins">--</span><span class="countdown-label">Minutes</span></div>
+        <div class="countdown-unit"><span class="countdown-value" id="cd-secs">--</span><span class="countdown-label">Seconds</span></div>
+      </div>
+
+      <p class="event-date">Tuesday, 30 June 2026</p>
+    </div>
+  </header>
+
+  <hr class="section-divider" />
+
+  <!-- ===== ELEVATOR PITCH ===== -->
+  <section class="pitch">
+    <div class="container">
+      <div class="pitch-inner">
+        <p class="section-label">About the event</p>
+        <p>
+          AI is changing everything about the way we approach software engineering and product development.
+          The technology has reached an <strong>inflexion point in capability</strong> — and as a result, we need to
+          shift our focus from merely augmenting developers with AI tools, to creating the environment that
+          allows AI to be truly successful.
+        </p>
+        <p>
+          We need to reshape our processes — moving away from ones designed around human strengths and
+          weaknesses, towards new ones shaped around the strengths and weaknesses of AI. <strong>This is not
+          going to be easy</strong>, and there are a great many important questions we don't yet have answers to.
+        </p>
+        <p>
+          Join us for an evening of talks from practitioners and conversations with your peers — to share
+          experiences and insights, learn together, and start forming a view of what our future looks like.
+        </p>
+        <a href="#" class="btn btn-primary">Reserve your place</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ===== SPEAKERS ===== -->
+  <section class="speakers">
+    <div class="container">
+      <p class="section-label" style="text-align:center">Speakers</p>
+      <h2>Hear from the practitioners</h2>
+
+      <div class="speakers-grid">
+
+        <!-- Chris Price -->
+        <div class="speaker-card">
+          <img
+            class="speaker-avatar"
+            src="https://1.gravatar.com/avatar/b6fe36176ec7c9475374a5cd3b7bef1a"
+            alt="Chris Price"
+            loading="lazy"
+          />
+          <div class="speaker-name">Chris Price</div>
+          <div class="speaker-affiliation">Scott Logic</div>
+          <div class="speaker-talk-title">Why you shouldn't add MCP to an arcade machine</div>
+          <p class="speaker-bio">
+            Dive into the secret world of arcade machines as Chris hacks a classic coin-pusher,
+            wiring it up to AI and unleashing remote control through VS Code. A fast-paced journey
+            through the wild challenges of blending hardware, firmware, and cutting-edge AI — where
+            engineering meets creativity and nothing is quite what it seems.
+          </p>
+        </div>
+
+        <!-- Chris Parsons -->
+        <div class="speaker-card">
+          <img
+            class="speaker-avatar"
+            src="https://media.licdn.com/dms/image/v2/D4E03AQH26_CM9-qjPg/profile-displayphoto-shrink_400_400/B4EZdDkt7FHYAg-/0/1749185388966?e=1776902400&v=beta&t=AolkIZokE9aVo_rHVVk6IuT9wtGCtB1e6ZooKjILRC0"
+            alt="Chris Parsons"
+            loading="lazy"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="speaker-avatar-placeholder" style="display:none;">&#128100;</div>
+          <div class="speaker-name">Chris Parsons</div>
+          <div class="speaker-affiliation">Independent AI Consultant</div>
+          <div class="speaker-talk-title">Vision for an AI-First Team Topology</div>
+          <p class="speaker-bio">
+            What if AI doesn't just change how we build software, but fundamentally transforms how
+            we organise teams? Drawing from early implementations across multiple organisations,
+            Chris shares emerging patterns for smaller yet more powerful stream-aligned teams,
+            AI-enabled enablement, and platform teams that deliver intelligence rather than just infrastructure.
+          </p>
+        </div>
+
+        <!-- TBD Speaker 3 -->
+        <div class="speaker-card tbd">
+          <div class="speaker-avatar-placeholder">&#63;</div>
+          <div class="speaker-name">Speaker TBA</div>
+          <div class="speaker-affiliation">&nbsp;</div>
+          <div class="speaker-talk-title">Talk to be announced</div>
+          <p class="speaker-bio">
+            Details coming soon. Stay tuned for more announcements as we finalise our speaker lineup.
+          </p>
+        </div>
+
+        <!-- TBD Speaker 4 -->
+        <div class="speaker-card tbd">
+          <div class="speaker-avatar-placeholder">&#63;</div>
+          <div class="speaker-name">Speaker TBA</div>
+          <div class="speaker-affiliation">&nbsp;</div>
+          <div class="speaker-talk-title">Talk to be announced</div>
+          <p class="speaker-bio">
+            Details coming soon. Stay tuned for more announcements as we finalise our speaker lineup.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p>Rethinking Software Engineering for the AI Age &nbsp;·&nbsp; 30 June 2026</p>
+  </footer>
+
+  <!-- ===== COUNTDOWN SCRIPT ===== -->
+  <script>
+    (function () {
+      const target = new Date('2026-06-30T18:00:00').getTime();
+
+      const pad = n => String(n).padStart(2, '0');
+
+      function tick() {
+        const now = Date.now();
+        const diff = target - now;
+
+        if (diff <= 0) {
+          document.getElementById('countdown').innerHTML =
+            '<p style="color:var(--accent);font-weight:700;font-size:1.2rem;">The event is today!</p>';
+          return;
+        }
+
+        const days  = Math.floor(diff / 864e5);
+        const hours = Math.floor((diff % 864e5) / 36e5);
+        const mins  = Math.floor((diff % 36e5)  / 6e4);
+        const secs  = Math.floor((diff % 6e4)   / 1e3);
+
+        document.getElementById('cd-days').textContent  = days;
+        document.getElementById('cd-hours').textContent = pad(hours);
+        document.getElementById('cd-mins').textContent  = pad(mins);
+        document.getElementById('cd-secs').textContent  = pad(secs);
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
+
+</body>
+</html>
