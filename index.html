@@ -7,15 +7,26 @@
   <style>
     /* ─── Theme tokens — change these to restyle the whole page ─── */
     :root {
-      --bg:           #0d0f14;
-      --surface:      #161b24;
-      --surface-2:    #1e2635;
-      --accent:       #6c63ff;
-      --accent-glow:  rgba(108, 99, 255, 0.25);
-      --accent-2:     #00d4aa;
-      --text:         #e8eaf0;
-      --text-muted:   #8a92a6;
-      --border:       rgba(255, 255, 255, 0.08);
+      /* Scott Logic brand palette */
+      --sl-charcoal:  #252525;
+      --sl-turquoise: #2bb3bb;
+      --sl-pink:      #c41565;
+      --sl-orange:    #ef8547;
+      --sl-yellow:    #F8BE4F;
+      --sl-green:     #7FC460;
+
+      /* Site tokens — edit these to change the look */
+      --bg:           #1a1a1a;
+      --surface:      var(--sl-charcoal);
+      --surface-2:    #2f2f2f;
+      --accent:       var(--sl-turquoise);
+      --accent-glow:  rgba(43, 179, 187, 0.22);
+      --accent-2:     var(--sl-orange);
+      --cta:          var(--sl-pink);
+      --cta-glow:     rgba(196, 21, 101, 0.3);
+      --text:         #f0f0f0;
+      --text-muted:   #999;
+      --border:       rgba(255, 255, 255, 0.09);
       --radius:       12px;
       --font-sans:    'Segoe UI', system-ui, -apple-system, sans-serif;
     }
@@ -45,7 +56,7 @@
     /* ─── Section banding ─── */
     .hero {
       background:
-        radial-gradient(ellipse 70% 60% at 75% 0%, rgba(108,99,255,0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 70% 60% at 75% 0%, rgba(43,179,187,0.15) 0%, transparent 65%),
         var(--bg);
       padding: 80px 0 60px;
       text-align: center;
@@ -57,7 +68,7 @@
 
     .speakers-section {
       background:
-        radial-gradient(ellipse 50% 60% at 20% 100%, rgba(0,212,170,0.08) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 60% at 20% 100%, rgba(196,21,101,0.1) 0%, transparent 65%),
         var(--bg);
     }
 
@@ -155,7 +166,7 @@
 
     .btn {
       display: inline-block;
-      background: var(--accent);
+      background: var(--cta);
       color: #fff;
       font-weight: 600;
       font-size: 1rem;
@@ -163,12 +174,12 @@
       border-radius: 999px;
       text-decoration: none;
       transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 0 24px var(--accent-glow);
+      box-shadow: 0 0 24px var(--cta-glow);
     }
 
     .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 32px var(--accent-glow);
+      box-shadow: 0 4px 32px var(--cta-glow);
     }
 
     /* ─── Speakers ─── */
