@@ -31,19 +31,7 @@
       min-height: 100vh;
     }
 
-    /* ─── Background motif ─── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(108,99,255,0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(0,212,170,0.07) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    main { position: relative; z-index: 1; }
+    main { position: relative; }
 
     /* ─── Layout ─── */
     .container {
@@ -54,10 +42,23 @@
 
     section { padding: 80px 0; }
 
-    /* ─── Hero ─── */
+    /* ─── Section banding ─── */
     .hero {
+      background:
+        radial-gradient(ellipse 70% 60% at 75% 0%, rgba(108,99,255,0.18) 0%, transparent 65%),
+        var(--bg);
       padding: 80px 0 60px;
       text-align: center;
+    }
+
+    .pitch-section {
+      background: var(--surface);
+    }
+
+    .speakers-section {
+      background:
+        radial-gradient(ellipse 50% 60% at 20% 100%, rgba(0,212,170,0.08) 0%, transparent 65%),
+        var(--bg);
     }
 
     .hero-badge {
@@ -100,7 +101,7 @@
     }
 
     .countdown-unit {
-      background: var(--surface);
+      background: var(--surface-2);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 16px 24px;
@@ -170,13 +171,6 @@
       box-shadow: 0 4px 32px var(--accent-glow);
     }
 
-    /* ─── Divider ─── */
-    .divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 0;
-    }
-
     /* ─── Speakers ─── */
     .section-label {
       font-size: 0.75rem;
@@ -199,7 +193,7 @@
     }
 
     .speaker-card {
-      background: var(--surface);
+      background: var(--surface-2);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 28px;
@@ -321,10 +315,8 @@
     </div>
   </section>
 
-  <hr class="divider" />
-
   <!-- ── Elevator Pitch ── -->
-  <section>
+  <section class="pitch-section">
     <div class="container" style="text-align:center;">
       <p class="pitch-text">
         AI is changing everything about the way we approach software engineering and product development.
@@ -347,10 +339,8 @@
     </div>
   </section>
 
-  <hr class="divider" />
-
   <!-- ── Speakers ── -->
-  <section>
+  <section class="speakers-section">
     <div class="container">
       <p class="section-label">Speakers</p>
       <h2 class="section-title">Hear from the practitioners</h2>
