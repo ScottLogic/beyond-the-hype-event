@@ -8,7 +8,11 @@
       "WebFetch(domain:www.eventbrite.com)",
       "WebSearch",
       "Bash(git remote:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(gh api:*)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d[''''status''''], d[''''error'''']\\)\")",
+      "Bash(git mv:*)",
+      "Bash(gh run:*)"
     ]
   },
   "enabledPlugins": {
