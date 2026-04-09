@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rethinking Software Engineering for the AI Age</title>
-  <style>
+  <link rel="stylesheet" href="https://use.typekit.net/fjg7yrm.css">
+<style>
     /* ─── Theme tokens — change these to restyle the whole page ─── */
     :root {
       /* Scott Logic brand palette */
@@ -28,7 +29,7 @@
       --text-muted:   #999;
       --border:       rgba(255, 255, 255, 0.09);
       --radius:       12px;
-      --font-sans:    'Segoe UI', system-ui, -apple-system, sans-serif;
+      --font-sans:    'objektiv-mk1', 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
 
     /* ─── Reset & base ─── */
@@ -94,7 +95,7 @@
 
     h1 {
       font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 700;
+      font-weight: 500;
       line-height: 1.15;
       letter-spacing: -0.02em;
       margin-bottom: 40px;
@@ -147,6 +148,7 @@
     /* ─── Pitch ─── */
     .pitch-text {
       font-size: 1.1rem;
+      font-weight: 300;
       color: var(--text-muted);
       max-width: 680px;
       margin: 0 auto 16px;
@@ -211,12 +213,6 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .speaker-card:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 24px var(--accent-glow);
     }
 
     .speaker-card.tbd {
