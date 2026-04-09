@@ -4,7 +4,9 @@
       "Bash(whois beyond-hype.com)",
       "mcp__plugin_domain-finder_domain-finder__check_domains",
       "WebFetch(domain:www.scottlogic.com)",
-      "mcp__plugin_domain-finder_domain-finder__check_single_domain"
+      "mcp__plugin_domain-finder_domain-finder__check_single_domain",
+      "WebFetch(domain:www.eventbrite.com)",
+      "WebSearch"
     ]
   },
   "enabledPlugins": {

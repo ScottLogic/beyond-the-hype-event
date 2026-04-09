@@ -376,6 +376,32 @@
     footer a { color: var(--text-muted); text-decoration: underline; }
     footer a:hover { color: var(--text); }
 
+    /* ─── Skip link ─── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      z-index: 9999;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ─── Visually hidden (screen-reader only) ─── */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     /* ─── Responsive ─── */
     @media (max-width: 640px) {
       .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
@@ -389,7 +415,9 @@
 </head>
 <body>
 
-  <canvas id="particle-canvas"></canvas>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
 
   <!-- Top bar -->
   <header class="topbar">
@@ -402,34 +430,36 @@
   </header>
 
   <!-- Hero -->
+  <main id="main-content">
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-left">
-        <h1 id="hero-title">Rethinking Software Engineering for the AI Age</h1>
-        <div class="countdown" id="countdown">
+        <h1 id="hero-title" aria-label="Rethinking Software Engineering for the AI Age">Rethinking Software Engineering for the AI Age</h1>
+        <div class="countdown" id="countdown" aria-hidden="true">
           <div class="countdown-unit"><span class="num" id="cd-days">--</span><span class="label">Days</span></div>
           <div class="countdown-unit"><span class="num" id="cd-hours">--</span><span class="label">Hours</span></div>
           <div class="countdown-unit"><span class="num" id="cd-mins">--</span><span class="label">Mins</span></div>
           <div class="countdown-unit"><span class="num" id="cd-secs">--</span><span class="label">Secs</span></div>
         </div>
+        <p class="sr-only">Event date: 30 June 2026</p>
       </div>
       <div class="hero-right">
-        <div class="motif-wrap">
+        <div class="motif-wrap" aria-hidden="true">
           <div class="radar-ring"></div>
           <div class="radar-ring"></div>
           <div class="radar-ring"></div>
-          <img src="assets/AI event motif.png" alt="" aria-hidden="true" />
+          <img src="assets/AI event motif.png" alt="" />
         </div>
       </div>
     </div>
   </section>
 
-  <p class="event-date">30 June 2026</p>
+  <p class="event-date"><time datetime="2026-06-30">30 June 2026</time></p>
 
   <!-- Elevator Pitch -->
-  <section class="pitch-section">
+  <section class="pitch-section" id="signup">
     <div class="container">
-      <h2 class="section-title" style="text-align:center; margin-bottom:32px;">The moment everything changes</h2>
+      <h2 class="section-title" aria-label="The moment everything changes" style="text-align:center; margin-bottom:32px;">The moment everything changes</h2>
       <p class="pitch-text">
         AI is changing everything about the way we approach software engineering and product development.
         The technology has reached an inflection point, and the focus must shift — from augmenting developers
@@ -453,8 +483,8 @@
   <!-- Speakers -->
   <section class="speakers-section">
     <div class="container">
-      <p class="section-label" style="text-align:center;">Speakers</p>
-      <h2 class="section-title" style="text-align:center;">Hear from the practitioners</h2>
+      <p class="section-label" style="text-align:center;" aria-hidden="true">Speakers</p>
+      <h2 class="section-title" aria-label="Hear from the practitioners" style="text-align:center;">Hear from the practitioners</h2>
 
       <div class="speakers-grid">
 
@@ -475,7 +505,7 @@
           </div>
         </div>
 
-        <div class="speaker-card tbd">
+        <div class="speaker-card tbd" aria-hidden="true">
           <div class="speaker-header">
             <div class="speaker-img-placeholder"></div>
             <div>
@@ -487,7 +517,7 @@
           <div class="talk-summary">More speakers coming soon. Watch this space.</div>
         </div>
 
-        <div class="speaker-card tbd">
+        <div class="speaker-card tbd" aria-hidden="true">
           <div class="speaker-header">
             <div class="speaker-img-placeholder"></div>
             <div>
@@ -499,7 +529,7 @@
           <div class="talk-summary">More speakers coming soon. Watch this space.</div>
         </div>
 
-        <div class="speaker-card tbd">
+        <div class="speaker-card tbd" aria-hidden="true">
           <div class="speaker-header">
             <div class="speaker-img-placeholder"></div>
             <div>
@@ -514,6 +544,7 @@
       </div>
     </div>
   </section>
+  </main>
 
   <footer>
     <div class="container">
