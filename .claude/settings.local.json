@@ -1,10 +1,10 @@
 {
-  "enabledPlugins": {
-    "domain-finder@builderkit": true
-  },
   "permissions": {
     "allow": [
       "Bash(whois beyond-hype.com)"
     ]
+  },
+  "enabledPlugins": {
+    "domain-finder@builderkit": true
   }
 }
