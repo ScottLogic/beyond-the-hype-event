@@ -613,7 +613,7 @@
 
       window.addEventListener('resize', () => {
         resize();
-        for (const p of particles) { p.x = Math.min(p.x, W); p.y = Math.min(p.y, H); }
+        particles = Array.from({ length: PARTICLE_COUNT }, createParticle);
       });
 
       init(); draw();
