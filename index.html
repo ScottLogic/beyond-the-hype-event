@@ -60,7 +60,33 @@
         radial-gradient(ellipse 70% 60% at 75% 0%, rgba(43,179,187,0.15) 0%, transparent 65%),
         var(--bg);
       padding: 80px 0 60px;
-      text-align: center;
+    }
+
+    .hero-inner {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .hero-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hero-motif-col {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-motif {
+      width: 260px;
+      display: block;
+    }
+
+    @media (max-width: 640px) {
+      .hero-inner { flex-direction: column; text-align: center; }
+      .hero-motif { width: 180px; margin: 0 auto; }
     }
 
     .pitch-section {
@@ -143,6 +169,7 @@
       font-size: 0.9rem;
       color: var(--text-muted);
       margin-top: 8px;
+      text-align: center;
     }
 
     /* ─── Pitch ─── */
@@ -304,18 +331,27 @@
         A Beyond the Hype Event
       </div>
 
-      <h1>
-        Rethinking Software Engineering<br>
-        for the <span class="accent">AI Age</span>
-      </h1>
+      <div class="hero-inner">
+        <div class="hero-content">
+          <h1>
+            Rethinking Software Engineering<br>
+            for the <span class="accent">AI Age</span>
+          </h1>
 
-      <!-- Countdown -->
-      <div class="countdown-wrap" id="countdown">
-        <div class="countdown-unit"><span class="num" id="cd-days">--</span><span class="label">Days</span></div>
-        <div class="countdown-unit"><span class="num" id="cd-hours">--</span><span class="label">Hours</span></div>
-        <div class="countdown-unit"><span class="num" id="cd-mins">--</span><span class="label">Minutes</span></div>
-        <div class="countdown-unit"><span class="num" id="cd-secs">--</span><span class="label">Seconds</span></div>
+          <!-- Countdown -->
+          <div class="countdown-wrap" id="countdown">
+            <div class="countdown-unit"><span class="num" id="cd-days">--</span><span class="label">Days</span></div>
+            <div class="countdown-unit"><span class="num" id="cd-hours">--</span><span class="label">Hours</span></div>
+            <div class="countdown-unit"><span class="num" id="cd-mins">--</span><span class="label">Minutes</span></div>
+            <div class="countdown-unit"><span class="num" id="cd-secs">--</span><span class="label">Seconds</span></div>
+          </div>
+        </div>
+
+        <div class="hero-motif-col">
+          <img class="hero-motif" src="assets/AI event motif.png" alt="" aria-hidden="true" />
+        </div>
       </div>
+
       <p class="event-date">30 June 2026</p>
 
     </div>
