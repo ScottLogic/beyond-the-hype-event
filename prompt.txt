@@ -1,8 +1,0 @@
- I'd like you to build me a single page brochure site for an event I am planning, the background info  
-  is in @context/ I'd like a simple site, with a dark background, It should use the title "Rethinking     
-  Software Engineering for the AI Age", with a count-down timer for the event (30th June 2026) in the     
-  heading. Following that, a few sentences that summarise the elevator pitch. together with a sign-up     
-  link (I'll add the URL later). After that, provide the speakers - for each, show their image, title   
-  and a brief summary fo their talk (kep the length consistent). Anything else important that you need    
-  to know ask me, otherwise, please build, Ideally theme colours should be easy to change so we can
-  iterate on the design
