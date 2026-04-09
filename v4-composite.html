@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rethinking Software Engineering for the AI Age</title>
+  <link rel="stylesheet" href="https://use.typekit.net/fjg7yrm.css">
+  <style>
+    /* ─── Theme tokens ─── */
+    :root {
+      --sl-charcoal:  #252525;
+      --sl-turquoise: #2bb3bb;
+      --sl-pink:      #c41565;
+      --sl-orange:    #ef8547;
+      --sl-yellow:    #F8Be4F;
+      --sl-green:     #7FC460;
+
+      --bg:           #1a1a1a;
+      --surface:      var(--sl-charcoal);
+      --surface-2:    #2f2f2f;
+      --accent:       var(--sl-turquoise);
+      --accent-glow:  rgba(43, 179, 187, 0.22);
+      --accent-2:     var(--sl-orange);
+      --cta:          var(--sl-pink);
+      --cta-glow:     rgba(196, 21, 101, 0.3);
+      --text:         #f0f0f0;
+      --text-muted:   #999;
+      --border:       rgba(255,255,255,0.09);
+      --radius:       12px;
+      --font-sans:    'objektiv-mk1', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    /* ─── Reset & base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Particle canvas ─── */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ─── Layout ─── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ─── Top bar ─── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(26,26,26,0.85);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-logo img { height: 28px; width: auto; }
+    .topbar-event img { height: 36px; width: auto; opacity: 0.85; }
+
+    /* ─── Hero ─── */
+    .hero {
+      padding: 5rem 2.5rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero h1 .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .hero h1 .word.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .accent { color: var(--accent); }
+
+    /* ─── Countdown ─── */
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .countdown-unit {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 0.5rem;
+      text-align: center;
+      backdrop-filter: blur(6px);
+    }
+
+    .countdown-unit .num {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+      transform-origin: center;
+    }
+
+    .countdown-unit .num.flip {
+      animation: num-flip 0.3s ease-in-out;
+    }
+
+    @keyframes num-flip {
+      0%  { transform: scaleY(1); }
+      40% { transform: scaleY(0); }
+      60% { transform: scaleY(0); }
+      100%{ transform: scaleY(1); }
+    }
+
+    .countdown-unit .label {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ─── Motif + radar ─── */
+    .motif-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .motif-wrap img {
+      width: 100%;
+      max-width: 320px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .radar-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 200px; height: 200px;
+      margin-top: -100px; margin-left: -100px;
+      border: 2px solid var(--sl-turquoise);
+      border-radius: 50%;
+      animation: radar-pulse 3s ease-out infinite;
+      pointer-events: none;
+    }
+
+    .radar-ring:nth-child(2) { animation-delay: 1s; }
+    .radar-ring:nth-child(3) { animation-delay: 2s; }
+
+    @keyframes radar-pulse {
+      0%   { transform: scale(0.5); opacity: 0.8; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    /* ─── Event date ─── */
+    .event-date {
+      text-align: center;
+      padding: 1.5rem 2.5rem 3rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── Section title with typewriter cursor ─── */
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-2);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 700;
+      margin-bottom: 48px;
+    }
+
+    .section-title::after {
+      content: '|';
+      display: inline-block;
+      margin-left: 2px;
+      color: var(--accent);
+      animation: blink-cursor 1s step-end infinite;
+    }
+
+    @keyframes blink-cursor {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ─── Pitch section ─── */
+    .pitch-section {
+      background: rgba(37, 37, 37, 0.75);
+      backdrop-filter: blur(4px);
+      padding: 80px 0;
+    }
+
+    .pitch-text {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 16px;
+      text-align: center;
+    }
+
+    .pitch-em { color: var(--text); }
+
+    .cta-wrap { margin-top: 40px; text-align: center; }
+
+    .btn {
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      background: var(--cta);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 14px 36px;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 0 24px var(--cta-glow);
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.35) 50%, transparent 80%);
+      transform: skewX(-15deg);
+      transition: left 0s;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 32px var(--cta-glow); }
+    .btn:hover::after { left: 160%; transition: left 0.55s ease; }
+
+    /* ─── Speakers section ─── */
+    .speakers-section {
+      padding: 80px 0;
+    }
+
+    .speakers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 24px;
+    }
+
+    /* ─── Speaker cards — v1 style ─── */
+    .speaker-card {
+      background: rgba(47, 47, 47, 0.7);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(6px);
+      position: relative;
+      overflow: hidden;
+      /* Scroll-in initial state */
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .speaker-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+.speaker-card.tbd {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .speaker-card.tbd.visible {
+      opacity: 0.45;
+    }
+
+    .speaker-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .speaker-img {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .speaker-img-placeholder {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      border: 2px dashed var(--border);
+      flex-shrink: 0;
+    }
+
+    .speaker-name {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .speaker-org {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .talk-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent);
+      line-height: 1.3;
+    }
+
+    .talk-summary {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      background: rgba(26,26,26,0.9);
+    }
+
+    footer a { color: var(--text-muted); text-decoration: underline; }
+    footer a:hover { color: var(--text); }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .motif-wrap { order: -1; }
+      .topbar { padding: 1rem 1.25rem; }
+      .topbar-logo img { height: 22px; }
+      .topbar-event img { height: 28px; }
+      .speakers-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <img src="assets/scott-logic-primary-inverted-no-tagline-full-color-rgb.svg" alt="Scott Logic" />
+    </div>
+    <div class="topbar-event">
+      <img src="assets/A Beyond the Hype event.png" alt="A Beyond the Hype event" />
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <h1 id="hero-title">Rethinking Software Engineering for the AI Age</h1>
+        <div class="countdown" id="countdown">
+          <div class="countdown-unit"><span class="num" id="cd-days">--</span><span class="label">Days</span></div>
+          <div class="countdown-unit"><span class="num" id="cd-hours">--</span><span class="label">Hours</span></div>
+          <div class="countdown-unit"><span class="num" id="cd-mins">--</span><span class="label">Mins</span></div>
+          <div class="countdown-unit"><span class="num" id="cd-secs">--</span><span class="label">Secs</span></div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="motif-wrap">
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <img src="assets/AI event motif.png" alt="" aria-hidden="true" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="event-date">30 June 2026</p>
+
+  <!-- Elevator Pitch -->
+  <section class="pitch-section">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center; margin-bottom:32px;">The moment everything changes</h2>
+      <p class="pitch-text">
+        AI is changing everything about the way we approach software engineering and product development.
+        The technology has reached an inflection point, and the focus must shift — from augmenting developers
+        with AI tools, to creating the environment in which AI can truly succeed.
+      </p>
+      <p class="pitch-text" style="margin-top:16px;">
+        We need to reshape our processes: away from ones designed around human strengths and weaknesses,
+        toward new ones shaped around <span class="pitch-em">the strengths and weaknesses of AI</span>.
+        There are hard questions ahead with no easy answers — yet.
+      </p>
+      <p class="pitch-text" style="margin-top:16px;">
+        Join us for an evening of talks from practitioners and conversations with your peers —
+        to share experiences, learn together, and start forming a picture of what our future looks like.
+      </p>
+      <div class="cta-wrap">
+        <a href="#signup" class="btn">Register your interest &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Speakers -->
+  <section class="speakers-section">
+    <div class="container">
+      <p class="section-label" style="text-align:center;">Speakers</p>
+      <h2 class="section-title" style="text-align:center;">Hear from the practitioners</h2>
+
+      <div class="speakers-grid">
+
+        <div class="speaker-card">
+          <div class="speaker-header">
+            <img class="speaker-img" src="https://1.gravatar.com/avatar/b6fe36176ec7c9475374a5cd3b7bef1a" alt="Chris Price" />
+            <div>
+              <div class="speaker-name">Chris Price</div>
+              <div class="speaker-org">Scott Logic</div>
+            </div>
+          </div>
+          <div class="talk-title">Why you shouldn't add MCP to an arcade machine</div>
+          <div class="talk-summary">
+            A fast-paced dive into hacking a classic coin-pusher arcade machine — wiring it up to AI,
+            adding remote control through VS Code, and discovering what happens when cutting-edge tools
+            meet old-school hardware. Expect unexpected challenges, creative engineering, and the
+            unmistakable thrill of an experiment that probably shouldn't work.
+          </div>
+        </div>
+
+        <div class="speaker-card">
+          <div class="speaker-header">
+            <img class="speaker-img" src="https://media.licdn.com/dms/image/v2/D4E03AQH26_CM9-qjPg/profile-displayphoto-shrink_400_400/B4EZdDkt7FHYAg-/0/1749185388966?e=1776902400&v=beta&t=AolkIZokE9aVo_rHVVk6IuT9wtGCtB1e6ZooKjILRC0" alt="Chris Parsons" />
+            <div>
+              <div class="speaker-name">Chris Parsons</div>
+              <div class="speaker-org">Independent AI Consultant</div>
+            </div>
+          </div>
+          <div class="talk-title">Vision for an AI-First Team Topology</div>
+          <div class="talk-summary">
+            What if AI doesn't just change how we build software, but how we organise teams?
+            Drawing from early implementations across multiple organisations, Chris paints a vision
+            for AI-first Team Topologies — smaller, more capable stream-aligned teams with blurred
+            boundaries, where designers prototype rapidly, developers transcend traditional skills,
+            and platform teams provide intelligence layers rather than just infrastructure.
+          </div>
+        </div>
+
+        <div class="speaker-card tbd">
+          <div class="speaker-header">
+            <div class="speaker-img-placeholder"></div>
+            <div>
+              <div class="speaker-name">To be announced</div>
+              <div class="speaker-org">&nbsp;</div>
+            </div>
+          </div>
+          <div class="talk-title">TBD</div>
+          <div class="talk-summary">More speakers coming soon. Watch this space.</div>
+        </div>
+
+        <div class="speaker-card tbd">
+          <div class="speaker-header">
+            <div class="speaker-img-placeholder"></div>
+            <div>
+              <div class="speaker-name">To be announced</div>
+              <div class="speaker-org">&nbsp;</div>
+            </div>
+          </div>
+          <div class="talk-title">TBD</div>
+          <div class="talk-summary">More speakers coming soon. Watch this space.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>Hosted by <a href="https://www.scottlogic.com">Scott Logic</a>
+        &mdash; &copy; 2026 Scott Logic Ltd. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    /* ─── 1. Particle canvas ─── */
+    (function () {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      const PARTICLE_COUNT = 80;
+      const MAX_DIST = 150;
+      const COLORS = ['#2bb3bb', '#c41565', '#ef8547'];
+      let W, H, particles;
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function createParticle() {
+        return {
+          x:     Math.random() * W,
+          y:     Math.random() * H,
+          vx:    (Math.random() - 0.5) * 0.8,
+          vy:    (Math.random() - 0.5) * 0.8,
+          r:     2,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        };
+      }
+
+      function init() { resize(); particles = Array.from({ length: PARTICLE_COUNT }, createParticle); }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of particles) {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > W) { p.vx *= -1; p.x = Math.max(0, Math.min(W, p.x)); }
+          if (p.y < 0 || p.y > H) { p.vy *= -1; p.y = Math.max(0, Math.min(H, p.y)); }
+        }
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i], b = particles[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < MAX_DIST) {
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = `rgba(43,179,187,${(1 - dist / MAX_DIST) * 0.35})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+        for (const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => {
+        resize();
+        for (const p of particles) { p.x = Math.min(p.x, W); p.y = Math.min(p.y, H); }
+      });
+
+      init(); draw();
+    }());
+
+    /* ─── 2. Hero word-by-word entrance ─── */
+    (function () {
+      const h1 = document.getElementById('hero-title');
+      const words = h1.textContent.trim().split(/\s+/);
+      const accentStart = words.length - 2;
+
+      h1.innerHTML = words.map((word, i) =>
+        `<span class="${i >= accentStart ? 'word accent' : 'word'}" style="margin-right:0.28em">${word}</span>`
+      ).join('');
+
+      const spans = h1.querySelectorAll('.word');
+      function reveal() { spans.forEach((s, i) => setTimeout(() => s.classList.add('visible'), i * 100)); }
+
+      if (document.readyState === 'complete') { setTimeout(reveal, 200); }
+      else { window.addEventListener('load', () => setTimeout(reveal, 200)); }
+    }());
+
+    /* ─── 3. Countdown ─── */
+    (function () {
+      const target = new Date('2026-06-30T00:00:00Z').getTime();
+      const elDays  = document.getElementById('cd-days');
+      const elHours = document.getElementById('cd-hours');
+      const elMins  = document.getElementById('cd-mins');
+      const elSecs  = document.getElementById('cd-secs');
+      const prev = {};
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function triggerFlip(el) {
+        el.classList.remove('flip');
+        void el.offsetWidth;
+        el.classList.add('flip');
+        el.addEventListener('animationend', () => el.classList.remove('flip'), { once: true });
+      }
+
+      function setNum(el, key, val) {
+        if (prev[key] !== val) { el.textContent = val; triggerFlip(el); prev[key] = val; }
+      }
+
+      function tick() {
+        const diff = Math.max(0, target - Date.now());
+        setNum(elDays,  'days',  pad(Math.floor(diff / 86400000)));
+        setNum(elHours, 'hours', pad(Math.floor((diff % 86400000) / 3600000)));
+        setNum(elMins,  'mins',  pad(Math.floor((diff % 3600000) / 60000)));
+        setNum(elSecs,  'secs',  pad(Math.floor((diff % 60000) / 1000)));
+      }
+
+      tick(); setInterval(tick, 1000);
+    }());
+
+    /* ─── 4. Scroll-in cards ─── */
+    (function () {
+      const cards = document.querySelectorAll('.speaker-card');
+      cards.forEach((card, i) => { card.style.transitionDelay = `${i * 0.12}s`; });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      cards.forEach((card) => observer.observe(card));
+    }());
+  </script>
+</body>
+</html>

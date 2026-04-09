@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rethinking Software Engineering for the AI Age</title>
+  <link rel="stylesheet" href="https://use.typekit.net/fjg7yrm.css">
+  <style>
+    /* ─── Theme tokens ─── */
+    :root {
+      --sl-charcoal:  #252525;
+      --sl-turquoise: #2bb3bb;
+      --sl-pink:      #c41565;
+      --sl-orange:    #ef8547;
+      --sl-yellow:    #F8Be4F;
+      --sl-green:     #7FC460;
+
+      --bg:           #1a1a1a;
+      --surface:      var(--sl-charcoal);
+      --surface-2:    #2f2f2f;
+      --accent:       var(--sl-turquoise);
+      --accent-glow:  rgba(43, 179, 187, 0.22);
+      --accent-2:     var(--sl-orange);
+      --cta:          var(--sl-pink);
+      --text:         #f0f0f0;
+      --text-muted:   #999;
+      --border:       rgba(255,255,255,0.09);
+      --radius:       12px;
+      --font-sans:    'objektiv-mk1', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    /* ─── Reset & base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Particle canvas ─── */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ─── Layout ─── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ─── Top bar ─── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(26,26,26,0.85);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-logo img {
+      height: 36px;
+      width: auto;
+    }
+
+    .topbar-event img {
+      height: 40px;
+      width: auto;
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      padding: 5rem 2.5rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero h1 .word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .hero h1 .word.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .accent { color: var(--accent); }
+
+    /* ─── Countdown ─── */
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .countdown-unit {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 0.5rem;
+      text-align: center;
+    }
+
+    .countdown-unit .num {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .countdown-unit .label {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ─── Motif + radar ─── */
+    .motif-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .motif-wrap img {
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .radar-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200px;
+      height: 200px;
+      margin-top: -100px;
+      margin-left: -100px;
+      border: 2px solid var(--sl-turquoise);
+      border-radius: 50%;
+      animation: radar-pulse 3s ease-out infinite;
+      pointer-events: none;
+    }
+
+    .radar-ring:nth-child(2) { animation-delay: 1s; }
+    .radar-ring:nth-child(3) { animation-delay: 2s; }
+
+    @keyframes radar-pulse {
+      0%   { transform: scale(0.5); opacity: 0.8; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    /* ─── Event date ─── */
+    .event-date {
+      text-align: center;
+      padding: 2rem 2.5rem 3rem;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .event-date span {
+      color: var(--sl-orange);
+    }
+
+    /* ─── Section title typewriter cursor ─── */
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title::after {
+      content: '|';
+      display: inline-block;
+      margin-left: 2px;
+      color: var(--accent);
+      animation: blink-cursor 1s step-end infinite;
+    }
+
+    @keyframes blink-cursor {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ─── Pitch section ─── */
+    .pitch {
+      background: var(--surface);
+      padding: 4rem 2.5rem;
+    }
+
+    .pitch-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .pitch p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      max-width: 720px;
+    }
+
+    .pitch p:last-child { margin-bottom: 0; }
+
+    .pitch p strong {
+      color: var(--text);
+    }
+
+    /* ─── Speakers section ─── */
+    .speakers {
+      padding: 4rem 2.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .speakers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Speaker card */
+    .speaker-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .speaker-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px rgba(43,179,187,0.15);
+    }
+
+    /* scan-line on hover */
+    .speaker-card::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -4px;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(43,179,187,0.7),
+        transparent
+      );
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .speaker-card:hover::after {
+      opacity: 1;
+      animation: scan 1.5s linear;
+    }
+
+    @keyframes scan {
+      0%   { top: -4px; }
+      100% { top: 100%; }
+    }
+
+    /* TBD card style */
+    .speaker-card.tbd {
+      opacity: 0.35;
+    }
+
+    .speaker-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1rem;
+      display: block;
+      border: 2px solid var(--border);
+    }
+
+    .speaker-name {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .speaker-org {
+      font-size: 0.78rem;
+      color: var(--sl-turquoise);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .speaker-talk {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .tbd-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      border: 2px dashed var(--border);
+      font-size: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 2.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: rgba(26,26,26,0.9);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .motif-wrap {
+        order: -1;
+      }
+
+      .topbar {
+        padding: 1rem 1.25rem;
+      }
+
+      .topbar-logo img { height: 28px; }
+      .topbar-event img { height: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particle canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <img src="assets/scott-logic-primary-inverted-no-tagline-full-color-rgb.svg" alt="Scott Logic" />
+    </div>
+    <div class="topbar-event">
+      <img src="assets/A Beyond the Hype event.png" alt="A Beyond the Hype event" />
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <h1 id="hero-title">Rethinking Software Engineering for the AI Age</h1>
+        <div class="countdown" id="countdown">
+          <div class="countdown-unit">
+            <span class="num" id="cd-days">00</span>
+            <span class="label">Days</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="num" id="cd-hours">00</span>
+            <span class="label">Hours</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="num" id="cd-mins">00</span>
+            <span class="label">Mins</span>
+          </div>
+          <div class="countdown-unit">
+            <span class="num" id="cd-secs">00</span>
+            <span class="label">Secs</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="motif-wrap">
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <div class="radar-ring"></div>
+          <img src="assets/AI event motif.png" alt="AI Event Motif" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Event date -->
+  <div class="event-date">
+    <span>30 June 2026</span>
+  </div>
+
+  <!-- Pitch section -->
+  <section class="pitch">
+    <div class="pitch-inner">
+      <h2 class="section-title">The moment everything changes</h2>
+      <p>
+        <strong>AI is no longer a future consideration — it is reshaping software engineering right now.</strong>
+        From code generation to autonomous agents, the tools available to engineering teams have
+        transformed dramatically. The question is no longer whether AI will change how we build software,
+        but how teams choose to adapt, lead, and stay in control of the process.
+      </p>
+      <p>
+        The risks are real. Over-reliance on AI-generated code can introduce subtle bugs and erode
+        the deep understanding that makes great software teams effective. Security posture, code
+        quality, and architectural integrity all require human judgement — informed, sharpened, and
+        directed by engineers who understand both the opportunity and the danger.
+      </p>
+      <p>
+        This event brings together practitioners who are navigating that tension every day. Expect
+        honest conversations about what is working, what is not, and what it means to build software
+        responsibly in the AI age. No hype. No easy answers. Just the hard-won insight of people
+        doing the work.
+      </p>
+    </div>
+  </section>
+
+  <!-- Speakers section -->
+  <section class="speakers">
+    <h2 class="section-title">Speakers</h2>
+    <div class="speakers-grid">
+
+      <!-- Chris Price -->
+      <div class="speaker-card">
+        <img
+          class="speaker-avatar"
+          src="https://1.gravatar.com/avatar/b6fe36176ec7c9475374a5cd3b7bef1a"
+          alt="Chris Price"
+        />
+        <div class="speaker-name">Chris Price</div>
+        <div class="speaker-org">Scott Logic</div>
+        <div class="speaker-talk">Building an MCP arcade machine — giving AI agents physical controls</div>
+      </div>
+
+      <!-- Chris Parsons -->
+      <div class="speaker-card">
+        <img
+          class="speaker-avatar"
+          src="https://media.licdn.com/dms/image/v2/C4D03AQEhBPbTEiOLSg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517487876159?e=2147483647&v=beta&t=YeQOsXiJJjvd5dRFi7FZBX8kBiQifJNb3l4ZJCKqvLs"
+          alt="Chris Parsons"
+        />
+        <div class="speaker-name">Chris Parsons</div>
+        <div class="speaker-org">Independent AI Consultant</div>
+        <div class="speaker-talk">AI-First Team Topology — rethinking how engineering teams are structured</div>
+      </div>
+
+      <!-- TBD 1 -->
+      <div class="speaker-card tbd">
+        <div class="tbd-avatar">?</div>
+        <div class="speaker-name">Speaker TBA</div>
+        <div class="speaker-org">—</div>
+        <div class="speaker-talk">More speakers to be announced</div>
+      </div>
+
+      <!-- TBD 2 -->
+      <div class="speaker-card tbd">
+        <div class="tbd-avatar">?</div>
+        <div class="speaker-name">Speaker TBA</div>
+        <div class="speaker-org">—</div>
+        <div class="speaker-talk">More speakers to be announced</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    Hosted by <a href="https://scottlogic.com" target="_blank" rel="noopener">Scott Logic</a>
+    &mdash; &copy; 2026 Scott Logic Ltd. All rights reserved.
+  </footer>
+
+  <script>
+    /* ═══════════════════════════════════════
+       1. PARTICLE / NEURAL-NETWORK CANVAS
+       ═══════════════════════════════════════ */
+    (function () {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const PARTICLE_COUNT = 80;
+      const MAX_DIST = 150;
+      const COLORS = ['#2bb3bb', '#c41565', '#ef8547'];
+
+      let W, H, particles;
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function randomBetween(a, b) {
+        return a + Math.random() * (b - a);
+      }
+
+      function createParticle() {
+        return {
+          x:    randomBetween(0, W),
+          y:    randomBetween(0, H),
+          vx:   randomBetween(-0.4, 0.4),
+          vy:   randomBetween(-0.4, 0.4),
+          r:    2,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        };
+      }
+
+      function init() {
+        resize();
+        particles = Array.from({ length: PARTICLE_COUNT }, createParticle);
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Update positions
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > W) { p.vx *= -1; p.x = Math.max(0, Math.min(W, p.x)); }
+          if (p.y < 0 || p.y > H) { p.vy *= -1; p.y = Math.max(0, Math.min(H, p.y)); }
+        }
+
+        // Draw lines between nearby particles
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i];
+            const b = particles[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < MAX_DIST) {
+              const alpha = (1 - dist / MAX_DIST) * 0.35;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = `rgba(43,179,187,${alpha})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Draw particles
+        for (const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => {
+        resize();
+        // Re-clamp particles inside new bounds
+        for (const p of particles) {
+          p.x = Math.min(p.x, W);
+          p.y = Math.min(p.y, H);
+        }
+      });
+
+      init();
+      draw();
+    }());
+
+
+    /* ═══════════════════════════════════════
+       2. HERO TEXT ENTRANCE (word-by-word)
+       ═══════════════════════════════════════ */
+    (function () {
+      const h1 = document.getElementById('hero-title');
+      const rawText = h1.textContent.trim();
+      const words = rawText.split(/\s+/);
+
+      // The last two words "AI Age" should be accent-coloured.
+      // We'll mark the last 2 words (indices length-2, length-1).
+      const accentStart = words.length - 2;
+
+      h1.innerHTML = words.map((word, i) => {
+        const cls = i >= accentStart ? 'word accent' : 'word';
+        return `<span class="${cls}" style="margin-right:0.28em">${word}</span>`;
+      }).join('');
+
+      const spans = h1.querySelectorAll('.word');
+
+      function revealWords() {
+        spans.forEach((span, i) => {
+          setTimeout(() => {
+            span.classList.add('visible');
+          }, i * 100);
+        });
+      }
+
+      // Kick off shortly after page load
+      window.addEventListener('load', () => {
+        setTimeout(revealWords, 200);
+      });
+      // Fallback in case load already fired
+      if (document.readyState === 'complete') {
+        setTimeout(revealWords, 200);
+      }
+    }());
+
+
+    /* ═══════════════════════════════════════
+       3. COUNTDOWN TIMER
+       ═══════════════════════════════════════ */
+    (function () {
+      const TARGET = new Date('2026-06-30T00:00:00Z').getTime();
+
+      const elDays  = document.getElementById('cd-days');
+      const elHours = document.getElementById('cd-hours');
+      const elMins  = document.getElementById('cd-mins');
+      const elSecs  = document.getElementById('cd-secs');
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function tick() {
+        const now  = Date.now();
+        const diff = Math.max(0, TARGET - now);
+
+        const totalSecs = Math.floor(diff / 1000);
+        const secs  = totalSecs % 60;
+        const mins  = Math.floor(totalSecs / 60) % 60;
+        const hours = Math.floor(totalSecs / 3600) % 24;
+        const days  = Math.floor(totalSecs / 86400);
+
+        elDays.textContent  = pad(days);
+        elHours.textContent = pad(hours);
+        elMins.textContent  = pad(mins);
+        elSecs.textContent  = pad(secs);
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    }());
+  </script>
+</body>
+</html>
