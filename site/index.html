@@ -597,11 +597,14 @@
 
       let scrolling = false;
       let scrollTimer;
-      window.addEventListener('scroll', () => {
-        scrolling = true;
+      function onScrollEnd() {
         clearTimeout(scrollTimer);
-        scrollTimer = setTimeout(() => { scrolling = false; }, 150);
-      }, { passive: true });
+        scrollTimer = setTimeout(() => { scrolling = false; }, 200);
+      }
+      window.addEventListener('touchstart', () => { scrolling = true; clearTimeout(scrollTimer); }, { passive: true });
+      window.addEventListener('touchend',   onScrollEnd, { passive: true });
+      window.addEventListener('touchcancel', onScrollEnd, { passive: true });
+      window.addEventListener('scroll', () => { scrolling = true; onScrollEnd(); }, { passive: true });
 
       function draw() {
         if (!scrolling) {
