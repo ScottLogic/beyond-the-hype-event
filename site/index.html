@@ -375,6 +375,30 @@
       line-height: 1.6;
     }
 
+    .talk-full {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      display: none;
+      margin-top: 8px;
+    }
+
+    .talk-expand-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      padding: 4px 0 0;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .talk-expand-btn:hover { color: var(--text); }
+
+    .talk-full p + p { margin-top: 0.75em; }
+
     /* ─── Footer ─── */
     footer {
       border-top: 1px solid var(--border);
@@ -504,7 +528,7 @@
 
         <div class="speaker-card">
           <div class="speaker-header">
-            <img class="speaker-img" src="https://1.gravatar.com/avatar/b6fe36176ec7c9475374a5cd3b7bef1a" alt="Chris Price" />
+            <img class="speaker-img" src="assets/cprice.jpeg" alt="Chris Price" />
             <div>
               <div class="speaker-name">Chris Price</div>
               <div class="speaker-org">Scott Logic</div>
@@ -517,18 +541,47 @@
             meet old-school hardware. Expect unexpected challenges, creative engineering, and the
             unmistakable thrill of an experiment that probably shouldn't work.
           </div>
+          <div class="talk-full">
+            Dive into the secret world of arcade machines as Chris hacks a classic coin-pusher, wiring it up
+            to AI and unleashing remote control through Visual Studio Code. Discover the ingenious tricks behind
+            game design, the wild challenges of blending hardware, firmware, and cutting-edge AI, and see how
+            modern tools can transform old-school tech into a playground for creative experimentation. Get ready
+            for a fast-paced journey where engineering meets innovation and nothing is quite what it seems!
+          </div>
+          <button class="talk-expand-btn" aria-expanded="false">Read more</button>
         </div>
 
-        <div class="speaker-card tbd" aria-hidden="true">
+        <div class="speaker-card">
           <div class="speaker-header">
-            <div class="speaker-img-placeholder"></div>
+            <img class="speaker-img" src="assets/cparsons.jpeg" alt="Chris Parsons" />
             <div>
-              <div class="speaker-name">To be announced</div>
-              <div class="speaker-org">&nbsp;</div>
+              <div class="speaker-name">Chris Parsons</div>
+              <div class="speaker-org">CTO &amp; Founder</div>
             </div>
           </div>
-          <div class="talk-title">TBD</div>
-          <div class="talk-summary">More speakers coming soon. Watch this space.</div>
+          <div class="talk-title">Vision for an AI-First Product Organisation</div>
+          <div class="talk-summary">
+            When AI makes code cheap to produce, what happens to the organisations built to produce it?
+            Drawing on Goldratt's Theory of Constraints and hands-on work with engineering leaders, this
+            talk explores the structural shifts underway as coding stops being the bottleneck, and the
+            central choice every engineering organisation now faces.
+          </div>
+          <div class="talk-full">
+            <p>Most AI conversations at engineering events focus on tools, models, and what's coming next.
+            This talk asks a harder question: when AI makes artefacts cheap to produce, what happens to
+            the organisations we built to produce them?</p> 
+            <p>Goldratt's Theory of Constraints tells us that
+            speeding up one part of a system doesn't make the system faster; it moves the bottleneck
+            somewhere else. If you've made coding faster but your organisation isn't shipping faster,
+            coding wasn't the constraint. The queue has simply moved somewhere else, and in many
+            organisations it's getting longer.</p> 
+            <p>Drawing on hands-on work with engineering leaders at
+            companies from 30 to 300 people, I'll share what's happening to team structures as coding
+            stops being the bottleneck. The talk covers the central choice every engineering organisation
+            faces right now, between hybridisation (AI-powered solo contributors) and amplification
+            (smaller, smarter teams), and why those paths lead somewhere different.</p>
+          </div>
+          <button class="talk-expand-btn" aria-expanded="false">Read more</button>
         </div>
 
         <div class="speaker-card tbd" aria-hidden="true">
@@ -718,7 +771,20 @@
       document.head.appendChild(script);
     }());
 
-    /* ─── 5. Scroll-in cards ─── */
+    /* ─── 5. Talk expand/collapse ─── */
+    (function () {
+      document.querySelectorAll('.talk-expand-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const full = btn.previousElementSibling;
+          const expanded = btn.getAttribute('aria-expanded') === 'true';
+          full.style.display = expanded ? 'none' : 'block';
+          btn.setAttribute('aria-expanded', String(!expanded));
+          btn.textContent = expanded ? 'Read more' : 'Read less';
+        });
+      });
+    }());
+
+    /* ─── 6. Scroll-in cards ─── */
     (function () {
       const cards = document.querySelectorAll('.speaker-card');
       cards.forEach((card, i) => { card.style.transitionDelay = `${i * 0.12}s`; });

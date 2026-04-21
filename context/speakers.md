@@ -3,14 +3,20 @@
 ## Why you shouldn’t add MCP to an arcade machine 
 
 Chris Price, Scott Logic
-https://1.gravatar.com/avatar/b6fe36176ec7c9475374a5cd3b7bef1a
+
 
 Dive into the secret world of arcade machines as Chris hacks a classic coin-pusher, wiring it up to AI and unleashing remote control through Visual Studio Code. Discover the ingenious tricks behind game design, the wild challenges of blending hardware, firmware, and cutting-edge AI, and see how modern tools can transform old-school tech into a playground for creative experimentation. Get ready for a fast-paced journey where engineering meets innovation and nothing is quite what it seems! 
 
 
-## TBD
+## Vision for an AI-First Product Organisation
 
-Speaker 2
+Chris Parsons, CTO & Founder 
+
+Most AI conversations at engineering events focus on tools, models, and what's coming next. This talk asks a harder question: when AI makes artefacts cheap to produce, what happens to the organisations we built to produce them?
+
+Goldratt's Theory of Constraints tells us that speeding up one part of a system doesn't make the system faster; it moves the bottleneck somewhere else. If you've made coding faster but your organisation isn't shipping faster, coding wasn't the constraint. The queue has simply moved somewhere else, and in many organisations it's getting longer.
+
+Drawing on hands-on work with engineering leaders at companies from 30 to 300 people, I'll share what's happening to team structures as coding stops being the bottleneck. The talk covers the central choice every engineering organisation faces right now, between hybridisation (AI-powered solo contributors) and amplification (smaller, smarter teams), and why those paths lead somewhere different. I'll sketch what amplified future product teams look like, how platform and enabling teams evolve in this world, and things you can act on now.
 
 ## TBD
 
