@@ -34,6 +34,8 @@ Key takeaways:
  
 Whether you're leading AI transformation or navigating it from within a team, you'll leave with actionable insights for the people side of AI adoption. 
 
-## TBD
+## Reinventing your SDLC for the GenAI Era
 
-Speaker 4
+Speaker to be announced soon.
+
+This talk explores how generative AI is not just a tooling upgrade but a fundamental platform shift, forcing organisations to reinvent their software development lifecycle to unlock meaningful productivity gains beyond today’s modest improvements . It highlights that achieving 10x outcomes requires more than copilots—demanding changes to engineering foundations, processes, and roles, with developers evolving from hands-on coders to supervisors of increasingly autonomous agentic systems . Drawing on real-world examples, it outlines the technical, organisational, and cultural barriers to becoming truly AI-native—and what it takes to overcome them at scale
